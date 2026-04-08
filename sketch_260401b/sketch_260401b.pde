@@ -16,11 +16,16 @@ color brush;
 float thick;
 float sliderX;
 
+PImage sanic;
+boolean sanicOn;
+
 void setup() {
   size(1300, 1000);
   background(255);
   canvas = 255;
   sliderX = 150;
+  sanic = loadImage("sanic.png");
+  sanicOn = false;
 }
 
 void draw() {
@@ -47,8 +52,10 @@ void draw() {
   canvasButton(200, 475, cyan);
   canvasButton(200, 550, black);
   canvasButton(200, 625, white);
-  
-  eraserButton(50, 775);
+
+  eraserButton(75, 800);
+
+  sanicStamp(50, 850);
 
   //spectrum=====================
   stroke(20);
@@ -58,10 +65,13 @@ void draw() {
 }
 
 void mouseDragged() {
-  if (mouseX > 300) {
+  if (mouseX > 300 && sanicOn == false) {
     stroke(brush);
     strokeWeight(thick);
     line(pmouseX, pmouseY, mouseX, mouseY);
+  }
+  if (sanicOn == true && mouseX > 300) {
+    image(sanic, mouseX - 50, mouseY - 50, 100, 100);
   } else {
     thicknessSlider();
   }
@@ -71,7 +81,7 @@ void mouseDragged() {
 void brushButton(int x, int y, int c) {
   if (mouseX > x && mouseX < x+50 && mouseY > y && mouseY < y+50) {
     stroke(255);
-    if (mouseX > x && mouseX < x+50 && mouseY > y && mouseY < y+50 && x < 150) {
+    if (mouseX > x && mouseX < x+50 && mouseY > y && mouseY < y+50 && x < 150 && mousePressed) {
       brush = c;
     }
   } else {
@@ -86,8 +96,8 @@ void canvasButton(int x, int y, int c) {
   if (mouseX > x && mouseX < x+50 && mouseY > y && mouseY < y+50) {
     stroke(255);
     if (mouseX > x && mouseX < x+50 && mouseY > y && mouseY < y+50 && x > 150) {
-      canvas = c;
       if (mousePressed) {
+        canvas = c;
         fill(canvas);
         strokeWeight(0);
         rect(300, -10, 1500, 1500);
@@ -101,10 +111,26 @@ void canvasButton(int x, int y, int c) {
   square(x, y, 50);
 }
 
-
+void mouseReleased() {
+  if (sanicOn == true && mouseX > 300) {
+    image(sanic, mouseX - 50, mouseY - 50, 100, 100);
+  }
+    if (mouseX > 50 && mouseX < 100 && mouseY > 850 && mouseY < 900) {
+    sanicOn = !sanicOn;
+  }
+}
 
 void mousePressed() {
   thicknessSlider();
+  
+  if (mouseX > 300 && sanicOn == false) {
+    stroke(brush);
+    strokeWeight(thick);
+    line(pmouseX, pmouseY, mouseX, mouseY);
+  }
+  if (sanicOn == true && mouseX > 300) {
+    image(sanic, mouseX - 50, mouseY - 50, 100, 100);
+  }
 }
 
 
@@ -116,12 +142,28 @@ void thicknessSlider() {
 }
 
 
-void eraserButton(int x, int y){
- if(dist(x, y, mouseX, mouseY) < 50){
- stroke(255);
-}else{
-  stroke(0);
+void eraserButton(int x, int y) {
+  if (dist(x, y, mouseX, mouseY) < 25) {
+    stroke(255);
+  } else {
+    stroke(0);
+  }
+  if (mousePressed && dist(x, y, mouseX, mouseY) < 25) {
+    brush = canvas;
+  }
+  fill(#F7A5F3);
+  circle(x, y, 50);
 }
-fill(#F7A5F3);
-square(x, y, 50);
+
+void sanicStamp(int x, int y) {
+  if (mouseX > x && mouseX < x + 50 && mouseY > y && mouseY < y + 50 && sanicOn == false) {
+    stroke(255);
+  } else {
+    stroke(0);
+  }  if (sanicOn == true) {
+    stroke(green);
+  }
+  fill(255);
+  square(x, y, 50);
+  image(sanic, x, y, 50, 50);
 }
