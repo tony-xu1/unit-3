@@ -19,6 +19,9 @@ float sliderX;
 PImage sanic;
 boolean sanicOn;
 
+PImage shadough;
+boolean shadoughOn;
+
 void setup() {
   size(1300, 1000);
   background(255);
@@ -26,7 +29,28 @@ void setup() {
   sliderX = 150;
   sanic = loadImage("sanic.png");
   sanicOn = false;
+  shadough = loadImage("shadough.png");
+  shadoughOn = false;
 }
+
+void saveImage(File f) {
+  if (f != null) {
+    PImage canvas = get( 71, 1, width, height);
+    canvas.save(f.getAbsolutePath());
+  }
+}
+
+void openImage (File f) {
+  if (f != null) {
+    int n =0;
+    while (n < 10) {
+      PImage pic = loadImage(f.getPath());
+      image(pic, 0, 0);
+      n = n+1;
+    }
+  }
+}
+
 
 void draw() {
   fill(#FFD78F);
@@ -56,6 +80,14 @@ void draw() {
   eraserButton(75, 800);
 
   sanicStamp(50, 850);
+  shadoughStamp(175, 850);
+
+  saveButton(50, 925);
+  loadButton(175, 925);
+
+
+  fill(255);
+  text
 
   //spectrum=====================
   stroke(20);
@@ -65,13 +97,16 @@ void draw() {
 }
 
 void mouseDragged() {
-  if (mouseX > 300 && sanicOn == false) {
+  if (mouseX > 300 && sanicOn == false && shadoughOn == false) {
     stroke(brush);
     strokeWeight(thick);
     line(pmouseX, pmouseY, mouseX, mouseY);
   }
-  if (sanicOn == true && mouseX > 300) {
+  if (sanicOn == true && shadoughOn == false && mouseX > 300) {
     image(sanic, mouseX - 50, mouseY - 50, 100, 100);
+  }
+  if (shadoughOn == true && sanicOn == false && mouseX > 300) {
+    image(shadough, mouseX - 50, mouseY - 50, 100, 100);
   } else {
     thicknessSlider();
   }
@@ -112,24 +147,41 @@ void canvasButton(int x, int y, int c) {
 }
 
 void mouseReleased() {
-  if (sanicOn == true && mouseX > 300) {
-    image(sanic, mouseX - 50, mouseY - 50, 100, 100);
-  }
-    if (mouseX > 50 && mouseX < 100 && mouseY > 850 && mouseY < 900) {
+  if (mouseX > 50 && mouseX < 100 && mouseY > 850 && mouseY < 900 && shadoughOn == false) {
     sanicOn = !sanicOn;
+  }
+  if (mouseX > 150 && mouseX < 200 && mouseY > 850 && mouseY < 900 && sanicOn == false) {
+    shadoughOn = !shadoughOn;
+  }
+  if (mouseX > 50 && mouseX < 100 && mouseY > 850 && mouseY < 900 && shadoughOn == true) {
+    sanicOn = !sanicOn;
+    shadoughOn = !shadoughOn;
+  }
+  if (mouseX > 150 && mouseX < 200 && mouseY > 850 && mouseY < 900 && sanicOn == true) {
+    shadoughOn = !shadoughOn;
+    sanicOn = !sanicOn;
+  }
+  if (mouseX > 50 && mouseX < 100 && mouseY > 925 && mouseY < 975) {
+    selectOutput("Choose a name for your drawing!", "saveImage");
+  }
+  if (mouseX > 175 && mouseX < 225 && mouseY > 925 && mouseY < 975) {
+    selectInput("Choose image you would like to load!", "openImage");
   }
 }
 
 void mousePressed() {
   thicknessSlider();
-  
-  if (mouseX > 300 && sanicOn == false) {
+
+  if (mouseX > 300 && sanicOn == false && shadoughOn == false) {
     stroke(brush);
     strokeWeight(thick);
     line(pmouseX, pmouseY, mouseX, mouseY);
   }
-  if (sanicOn == true && mouseX > 300) {
+  if (sanicOn == true && shadoughOn == false && mouseX > 300) {
     image(sanic, mouseX - 50, mouseY - 50, 100, 100);
+  }
+  if (shadoughOn == true && sanicOn == false && mouseX > 300) {
+    image(shadough, mouseX - 50, mouseY - 50, 100, 100);
   }
 }
 
@@ -138,7 +190,7 @@ void thicknessSlider() {
   if (mouseX > 50 && mouseX < 250 && mouseY > 700 && mouseY < 750) {
     sliderX = mouseX;
   }
-  thick = map(sliderX, 50, 250, 0, 100);
+  thick = map(sliderX, 50, 250, 0, 75);
 }
 
 
@@ -160,10 +212,51 @@ void sanicStamp(int x, int y) {
     stroke(255);
   } else {
     stroke(0);
-  }  if (sanicOn == true) {
+  }
+  if (sanicOn == true) {
     stroke(green);
   }
   fill(255);
   square(x, y, 50);
   image(sanic, x, y, 50, 50);
+}
+
+
+void shadoughStamp(int x, int y) {
+  if (mouseX > x && mouseX < x + 50 && mouseY > y && mouseY < y + 50 && shadoughOn == false) {
+    stroke(255);
+  } else {
+    stroke(0);
+  }
+  if (shadoughOn == true) {
+    stroke(green);
+  }
+  fill(255);
+  square(x, y, 50);
+  image(shadough, x, y, 50, 50);
+}
+
+void saveButton(int x, int y) {
+  if (mouseX > x && mouseX < x + 50 && mouseY > y && mouseY < y + 50) {
+    stroke(255);
+  } else {
+    stroke(0);
+  }
+  fill(155);
+  square(x, y, 50);
+  fill(0);
+  text("SAVE", x + 13, y + 27);
+}
+
+
+void loadButton(int x, int y) {
+  if (mouseX > x && mouseX < x + 50 && mouseY > y && mouseY < y + 50) {
+    stroke(255);
+  } else {
+    stroke(0);
+  }
+  fill(155);
+  square(x, y, 50);
+  fill(0);
+  text("LOAD", x + 13, y + 27);
 }
