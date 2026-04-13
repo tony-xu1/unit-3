@@ -36,7 +36,7 @@ void setup() {
 
 void saveImage(File f) {
   if (f != null) {
-    PImage canvas = get( 71, 1, width, height);
+    PImage canvas = get( 300, 0, width, height);
     canvas.save(f.getAbsolutePath());
   }
 }//save image function-----------------------
@@ -46,7 +46,7 @@ void openImage (File f) {
     int n =0;
     while (n < 10) {
       PImage pic = loadImage(f.getPath());
-      image(pic, 0, 0);
+      image(pic, 300, 0);
       n = n+1;
     }
   }
